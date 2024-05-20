@@ -1,18 +1,16 @@
 # Dotnet-openshift
 
-Entiendo que deseas usar el thumbprint para asegurar que estás utilizando el certificado correcto, incluso después de cargarlo desde un archivo PFX. Este enfoque puede ser útil cuando el archivo PFX contiene múltiples certificados y deseas seleccionar uno específico.
-
-A continuación, te presento un enfoque más completo para buscar y utilizar un certificado específico por su thumbprint, después de cargarlo desde un archivo PFX que se ha montado en un contenedor de OpenShift.
+Para buscar y utilizar un certificado específico por su thumbprint, después de cargarlo desde un archivo PFX que se ha montado en un contenedor de OpenShift.
 
 ### 1. Crear y montar el Secret en OpenShift
 
-Primero, crea un Secret en OpenShift que contenga tu archivo .pfx:
+Primero, crear un Secret en OpenShift que contenga tu archivo .pfx:
 
 ```bash
 oc create secret generic my-pfx-secret --from-file=certificado.pfx=/ruta/al/certificado.pfx
 ```
 
-Luego, actualiza tu Deployment para montar el Secret en el contenedor:
+Luego, actualizar tu Deployment para montar el Secret en el contenedor:
 
 ```yaml
 apiVersion: apps/v1
@@ -133,7 +131,7 @@ oc apply -f deployment.yaml
 
 ### Nota sobre la validación de certificados del servidor
 
-En el código proporcionado, se usa `HttpClientHandler.DangerousAcceptAnyServerCertificateValidator` para aceptar cualquier certificado del servidor, lo cual no es seguro en un entorno de producción. Implementa una validación adecuada del certificado del servidor según tus necesidades de seguridad:
+En el código, se usa `HttpClientHandler.DangerousAcceptAnyServerCertificateValidator` para aceptar cualquier certificado del servidor, lo cual no es seguro en un entorno de producción. Implementa una validación adecuada del certificado del servidor según tus necesidades de seguridad:
 
 ```csharp
 handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
