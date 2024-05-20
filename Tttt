@@ -1,0 +1,5 @@
+# Read the transformed JSON content
+UPDATED_JSON=$(cat $JSON_FILE | jq -c .)
+
+# Use yq to update the JSON content in the ConfigMap
+yq eval '.data["appsettings.json"] = strenv(UPDATED_JSON)' $CONFIGMAP_FILE > temp.yaml && mv temp.yaml $CONFIGMAP_FILE
